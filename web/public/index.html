@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tab Audio Exporter</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 15px/1.6 system-ui, sans-serif; max-width: 640px; margin: 24px auto; padding: 0 16px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: #777; margin: 0 0 16px; }
+  button { font-size: 16px; padding: 8px 18px; margin-right: 8px; cursor: pointer; }
+  #status { font-weight: 700; }
+  #status.recording { color: #d33; }
+  #meter { height: 12px; background: rgba(128,128,128,.25); border-radius: 6px; overflow: hidden; }
+  #meter > div { height: 100%; width: 0; background: #2a7; transition: width .08s; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 14px; margin: 0; }
+  dt { color: #777; } dd { margin: 0; font-variant-numeric: tabular-nums; }
+  .row { margin: 14px 0; }
+  .box { border: 1px solid rgba(128,128,128,.4); border-radius: 8px; padding: 10px 14px; }
+  #error { color: #d33; white-space: pre-wrap; }
+  #log { font: 12px/1.5 ui-monospace, monospace; background: rgba(128,128,128,.12); padding: 8px; height: 150px; overflow: auto; white-space: pre-wrap; border-radius: 6px; }
+  input[type=text] { font-size: 15px; padding: 4px 8px; width: 16em; }
+  ol { margin: 6px 0 0 1.2em; padding: 0; } .hint { color: #777; font-size: 13px; }
+</style>
+</head>
+<body>
+<h1>Tab Audio Exporter</h1>
+<p class="sub">タブで鳴っている音を MP3 (192kbps) で書き出します（個人用）</p>
+
+<div class="row box">
+  <b>使い方</b>
+  <ol>
+    <li>音を録りたいタブを<b>別のタブ</b>で開いておく（このページは録音用）</li>
+    <li>「録音開始」→ 共有ダイアログで<b>「Chromeタブ」</b>を選び、対象タブを選択</li>
+    <li><b>「タブの音声も共有」にチェック</b>を入れて「共有」</li>
+    <li>録りたい音を再生 → このタブに戻って「停止」→ MP3を保存</li>
+  </ol>
+  <div class="hint">※ macOS ではシステム音声は共有できません。「Chromeタブ」のみ音声付きで共有できます。</div>
+</div>
+
+<div class="row">
+  ファイル名: <input type="text" id="name" value="recording"> <span class="hint">.mp3（日時を自動付与）</span>
+</div>
+<div class="row">
+  <button id="start">● 録音開始</button>
+  <button id="stop" disabled>■ 停止</button>
+  <span id="status">待機中</span>
+</div>
+<div class="row"><div id="meter"><div></div></div></div>
+<div class="row box">
+  <dl>
+    <dt>共有中のタブ</dt><dd id="target">-</dd>
+    <dt>経過時間</dt><dd id="elapsed">0:00</dd>
+    <dt>MP3サイズ</dt><dd id="size">0 KB</dd>
+    <dt>形式</dt><dd id="fmt">-</dd>
+    <dt>エンコード待ち / 最大処理時間</dt><dd id="enc">-</dd>
+    <dt>JSヒープ</dt><dd id="heap">-</dd>
+  </dl>
+</div>
+<div class="row" id="error"></div>
+<div class="row box" id="result" hidden>
+  完了: <span id="resultInfo"></span><br>
+  <a id="save" href="#" download><button type="button">MP3を保存</button></a>
+  <audio id="player" controls style="width:100%;margin-top:8px"></audio>
+</div>
+<div class="row"><div id="log"></div></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

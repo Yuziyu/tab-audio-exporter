@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>pipeline harness</title>
+<script type="module">
+  import { startPipeline } from '/extension/lib/capture-pipeline.js';
+
+  // 実際の tabCapture の代わりに Chrome の偽マイク入力(WAVファイル再生)を MediaStream として使う
+  window.record = async (seconds) => {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+    });
+    const levels = [];
+    const errors = [];
+    const p = await startPipeline(stream, {
+      kbps: 192,
+      passthrough: true,
+      onLevel: (v) => levels.push(v),
+      onError: (e) => errors.push(String(e)),
+    });
+    await new Promise((r) => setTimeout(r, seconds * 1000));
+    const backlogBeforeStop = p.backlog;
+    const res = await p.stop();
+    const buf = new Uint8Array(await res.blob.arrayBuffer());
+    let bin = '';
+    for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+    return {
+      mp3Base64: btoa(bin),
+      bytes: res.bytes,
+      durationSec: res.durationSec,
+      sampleRate: res.sampleRate,
+      peakMax: Math.max(0, ...levels),
+      levelCount: levels.length,
+      errors,
+      backlogBeforeStop,
+      maxEncodeMs: p.stats.maxEncodeMs,
+    };
+  };
+
+  // MP3 をブラウザでデコードし、指定周波数のエネルギー(Goertzel)を測る
+  window.analyze = async (base64) => {
+    const bin = atob(base64);
+    const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+    const ctx = new AudioContext();
+    const audio = await ctx.decodeAudioData(bytes.buffer);
+    const goertzel = (x, f, fs) => {
+      const w = (2 * Math.PI * f) / fs;
+      const c = 2 * Math.cos(w);
+      let s1 = 0, s2 = 0;
+      for (let i = 0; i < x.length; i++) { const s = x[i] + c * s1 - s2; s2 = s1; s1 = s; }
+      return Math.sqrt(s1 * s1 + s2 * s2 - c * s1 * s2) / x.length;
+    };
+    // 先頭0.5秒は立ち上がりなので除外し、1秒分を解析
+    const fs = audio.sampleRate;
+    const seg = (ch) => audio.getChannelData(ch).subarray(Math.floor(fs * 0.5), Math.floor(fs * 1.5));
+    const L = seg(0), R = seg(1);
+    return {
+      decodedDuration: audio.duration,
+      decodedRate: fs,
+      channels: audio.numberOfChannels,
+      L440: goertzel(L, 440, fs), L1000: goertzel(L, 1000, fs),
+      R660: goertzel(R, 660, fs), R1000: goertzel(R, 1000, fs),
+    };
+  };
+  window.ready = true;
+</script>

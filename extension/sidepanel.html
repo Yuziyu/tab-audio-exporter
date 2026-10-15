@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Tab Audio Exporter</title>
+<style>
+  body { font: 13px/1.5 system-ui, sans-serif; margin: 0; padding: 12px; color: #222; }
+  h1 { font-size: 14px; margin: 0 0 8px; }
+  .row { margin: 8px 0; }
+  button { font-size: 14px; padding: 6px 12px; margin-right: 6px; cursor: pointer; }
+  #status { font-weight: 600; }
+  #status.recording { color: #c00; }
+  #meter { width: 100%; height: 10px; background: #eee; border-radius: 5px; overflow: hidden; }
+  #meter > div { height: 100%; width: 0; background: #2a7; transition: width 0.08s; }
+  dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; }
+  dt { color: #666; }
+  dd { margin: 0; font-variant-numeric: tabular-nums; }
+  #error { color: #b00; white-space: pre-wrap; }
+  #log { font: 11px/1.4 ui-monospace, monospace; background: #f6f6f6; padding: 6px; height: 140px; overflow: auto; white-space: pre-wrap; }
+  .hint { color: #666; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>Tab Audio Exporter <span class="hint">(PoC)</span></h1>
+<div class="row">対象タブ: <span id="target">-</span></div>
+<div class="row">状態: <span id="status">待機中</span></div>
+<div class="row">
+  <button id="start">● 録音開始</button>
+  <button id="stop" disabled>■ 停止</button>
+</div>
+<div class="row hint">ショートカット: Alt+Shift+R（開始/停止）。chrome://extensions/shortcuts で変更可</div>
+<div class="row"><div id="meter"><div></div></div></div>
+<div class="row">
+  <dl>
+    <dt>経過</dt><dd id="elapsed">0:00</dd>
+    <dt>MP3サイズ</dt><dd id="size">0 KB</dd>
+    <dt>サンプルレート</dt><dd id="rate">-</dd>
+    <dt>エンコード待ち</dt><dd id="backlog">0</dd>
+    <dt>最大エンコード時間</dt><dd id="maxenc">-</dd>
+    <dt>JSヒープ</dt><dd id="heap">-</dd>
+  </dl>
+</div>
+<div class="row" id="error"></div>
+<div class="row" id="result" hidden>
+  <div>完了: <span id="resultInfo"></span></div>
+  <button id="save">MP3を保存</button> <a id="link" href="#" download>(リンクから保存)</a>
+</div>
+<div class="row"><div id="log"></div></div>
+<script type="module" src="sidepanel.js"></script>
+</body>
+</html>
