@@ -31,7 +31,7 @@ test('floatToInt16 clips and scales', () => {
   assert.deepEqual(Array.from(out), [-32768, -32768, 0, 16383, 32767, 32767]);
 });
 
-// PoC項目③: 対応サンプルレート（ブラウザは通常 44100 / 48000）
+// 対応サンプルレート（ブラウザは通常 44100 / 48000）
 for (const sampleRate of [32000, 44100, 48000]) {
   test(`192kbps stereo @${sampleRate}Hz: 不規則なチャンク長でも正しい MP3 になる`, () => {
     const seconds = 10;
@@ -72,7 +72,7 @@ test('未対応のチャンネル数は拒否', () => {
   assert.throws(() => new Mp3Stream({ sampleRate: 48000, channels: 6 }));
 });
 
-// 参考: 対応外のサンプルレートが「無言で壊れた出力」になるかを記録する（PoCの調査項目）
+// 参考: 対応外のサンプルレートが「無言で壊れた出力」になるかを記録する
 test('[調査] 96000Hz のような非対応レートの挙動を確認', () => {
   let result;
   try {

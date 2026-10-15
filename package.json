@@ -2,7 +2,7 @@
   "name": "tab-audio-exporter",
   "version": "0.0.1",
   "private": true,
-  "description": "PoC: Chrome extension that records a tab's audio and exports it as MP3 (personal use)",
+  "description": "Record a Chrome tab's audio and export it as MP3 (web app and Chrome extension)",
   "type": "module",
   "scripts": {
     "vendor": "node scripts/vendor.mjs",

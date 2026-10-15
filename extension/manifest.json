@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Tab Audio Exporter (PoC)",
+  "name": "Tab Audio Exporter",
   "version": "0.0.1",
-  "description": "タブで鳴っている音を MP3 (192kbps) として書き出す個人用PoC",
+  "description": "タブで鳴っている音を MP3 (192kbps) として書き出す",
   "minimum_chrome_version": "116",
   "permissions": ["tabCapture", "offscreen", "sidePanel", "activeTab", "tabs", "downloads"],
   "background": { "service_worker": "service-worker.js", "type": "module" },

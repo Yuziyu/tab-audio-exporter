@@ -67,7 +67,7 @@ $('start').addEventListener('click', async () => {
   log(`開始要求: tab ${tab.id} "${tab.title}"`);
   let streamId;
   try {
-    // ★PoC検証項目①: Side Panel 内のボタン操作で getMediaStreamId が許可されるか
+    // Side Panel 内のボタン操作で getMediaStreamId が許可されるか
     streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: tab.id });
     log('getMediaStreamId: OK（Side Panel のボタンから取得できた）');
   } catch (e) {

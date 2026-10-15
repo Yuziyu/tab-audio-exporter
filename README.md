@@ -1,16 +1,16 @@
-# Tab Audio Exporter (PoC)
+# Tab Audio Exporter
 
-Chrome のタブで鳴っている音を **MP3 (192kbps CBR)** として書き出す、個人利用のツール PoC。
+Chrome のタブで鳴っている音を **MP3 (192kbps CBR)** として書き出すツール。
 **Web版（`web/`）** と **Chrome拡張版（`extension/`）** の2形態があり、録音〜MP3化の処理（`extension/lib/`）は共通。
 
 | 形態 | 状況 |
 |---|---|
-| Web版（localhost + 標準のタブ共有） | 会社管理の Chrome でも動作確認済み（拡張機能のポリシー制限の対象外）。**現在のメイン** |
-| 拡張機能版（tabCapture） | 会社管理の Chrome では「Extension installation is blocked by policy」で読み込めない。私用環境向け |
+| Web版（localhost + 標準のタブ共有） | 拡張機能のインストールが制限された環境（会社管理の Chrome 等）でも動作確認済み。**メイン** |
+| 拡張機能版（tabCapture） | 拡張機能のインストールが制限された環境（会社管理の Chrome 等）では「Extension installation is blocked by policy」で読み込めない |
 
 配信形式（MP3/HLS/DASH/MSE/Web Audio 等）に関わらず、ブラウザが再生した後の音をタブ単位で録音する。
 
-- 対象: Chrome のみ / 個人利用 / 配布しない / DRM コンテンツは対象外
+- 対象: Chrome のみ / DRM コンテンツは対象外
 - 設計メモ: Obsidian vault の `🎯 Projects/Tab Audio Exporter/`
 
 ## クイックスタート（Web版の起動方法）
@@ -33,14 +33,9 @@ npm run web
 - 必要なもの: Node.js（動作確認は v24）
 - ポートを変えたいとき: `PORT=9000 npm run web`
 - 「このアドレスに接続できません」と出たら、サーバ（手順3）が起動していない
-- 使い方の詳細は下の「Web版の使い方」を参照
+- 起動後の使い方は下の「Web版の使い方」を参照
 
 ## Web版の使い方
-
-```sh
-npm install
-npm run web          # http://localhost:8765/ で配信（Ctrl+C で終了）
-```
 
 1. Chrome で `http://localhost:8765/` を開く（録音用タブ）
 2. 録りたい音のタブを**別のタブ**で開いておく
@@ -91,7 +86,7 @@ SOAK_SECONDS=600 npm run test:e2e   # 長時間録音（10分）
 > 会社管理の Google Chrome は DevTools のリモートデバッグがポリシーで禁止されているため、
 > E2E は Playwright 同梱の Chromium を使う（`.browsers/`、git管理外）。
 
-## 拡張機能版: Chrome への読み込みと手動確認（私用環境向け）
+## 拡張機能版: Chrome への読み込み方法
 
 1. `chrome://extensions` を開き、右上の「デベロッパーモード」を ON
 2. 「パッケージ化されていない拡張機能を読み込む」→ `extension/` を選択
@@ -99,7 +94,7 @@ SOAK_SECONDS=600 npm run test:e2e   # 長時間録音（10分）
 4. 「● 録音開始」。**エラーになった場合は `Alt+Shift+R` で開始**（`chrome://extensions/shortcuts` で変更可）
 5. 「■ 停止」→「MP3を保存」
 
-### PoC で確認したいこと（自動テストでは確認できない部分）
+### 手動で確認する項目（自動テストでは確認できない部分）
 | # | 確認項目 | 見る場所 |
 |---|---|---|
 | ① | Side Panel のボタンで録音を開始できるか（できない場合はショートカットで） | Side Panel のログ `getMediaStreamId: OK / NG` |

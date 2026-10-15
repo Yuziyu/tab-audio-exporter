@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   return true;
 });
 
-// ショートカット(Alt+Shift+R)でトグル。ユーザー操作として activeTab が付与される想定（PoCで検証）
+// ショートカット(Alt+Shift+R)でトグル。ユーザー操作として activeTab が付与される想定
 chrome.commands.onCommand.addListener(async (command, tab) => {
   if (command !== 'toggle-recording') return;
   try {
