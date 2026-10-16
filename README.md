@@ -11,7 +11,6 @@ Chrome のタブで鳴っている音を **MP3 (192kbps CBR)** として書き�
 配信形式（MP3/HLS/DASH/MSE/Web Audio 等）に関わらず、ブラウザが再生した後の音をタブ単位で録音する。
 
 - 対象: Chrome のみ / DRM コンテンツは対象外
-- 設計メモ: Obsidian vault の `🎯 Projects/Tab Audio Exporter/`
 
 ## クイックスタート（Web版の起動方法）
 
